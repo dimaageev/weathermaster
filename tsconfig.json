@@ -1,6 +1,22 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "types": ["react-native"],
+    "jsx": "react-native",
+    "lib": ["es2017"],
+    "target": "esnext",
+    "paths": {
+      "@screens/*": ["src/screens/*"],
+      "@assets/*": ["src/assets/*"],
+      "@src/*": ["src/*"],
+      "@root/*": ["./*"],
+      "@components/*": ["src/components/*"],
+      "@constants/*": ["src/constants/*"],
+      "@store/*": ["src/store/*"],
+      "@styles/*": ["src/styles/*"]
+    }
   }
 }
