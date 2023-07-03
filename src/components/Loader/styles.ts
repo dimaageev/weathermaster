@@ -1,9 +1,14 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-  flatlistContainer: {
-    flexGrow: 1,
+  absolute: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#00000033",
   },
 });

@@ -12,4 +12,5 @@ export interface City {
   regionWdId: string;
   type: string;
   wikiDataId: string;
+  temp: number;
 }

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
-
-import styles from "@src/styles";
 import { getRandomCity } from "@src/store/api";
 import { City } from "@src/store/types";
 
+import styles from "@src/styles";
+import st from "./styles";
+
 const HomeScreen = () => {
   const [randomCities, setRandomCities] = useState<City[]>();
-
-  console.log(randomCities);
 
   useEffect(() => {
     (async () => {
@@ -24,15 +23,15 @@ const HomeScreen = () => {
   return (
     <View style={styles.background}>
       <FlatList
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        contentContainerStyle={st.flatlistContainer}
         data={randomCities}
-        renderItem={({ item }) => (
-          <Text>{`${item?.city}, ${item?.country}`}</Text>
-        )}
+        renderItem={({ item }) => {
+          return (
+            <Text>{`${item?.city}, ${
+              item?.countryCode === "US" ? item?.region + ", " : ""
+            } ${item?.country}: ${item?.temp}`}</Text>
+          );
+        }}
       />
     </View>
   );

@@ -1,14 +1,14 @@
+import { WEATHER_API } from "@src/constants/keys";
 import { City } from "./types";
 import axios from "axios";
-
-function setRandomNumber(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+import { setRandomNumber } from "@src/utils/mathUtils";
+import { startLoading, stopLoading } from "@src/utils/refs/loader";
 
 export const getRandomCity = () => {
   return new Promise<City>((resolve, reject) => {
     let totalPages = 0;
 
+    startLoading();
     axios
       .get(
         "http://geodb-free-service.wirefreethought.com/v1/geo/cities?limit=10&offset=1&hateoasMode=off"
@@ -26,14 +26,27 @@ export const getRandomCity = () => {
               response.data.data[
                 setRandomNumber(0, response.data.data.length - 1)
               ];
-            console.log(randomCity);
-            resolve(randomCity);
+            axios
+              .get(
+                `https://api.openweathermap.org/data/2.5/weather?lat=${randomCity.latitude}&lon=${randomCity.longitude}&appid=${WEATHER_API}&units=metric`
+              )
+              .then((response: any) => {
+                randomCity.temp = response.data.main.temp;
+                stopLoading();
+                resolve(randomCity);
+              })
+              .catch((err: any) => {
+                stopLoading();
+                reject(err);
+              });
           })
           .catch((err: any) => {
+            stopLoading();
             reject(err);
           });
       })
       .catch((err: any) => {
+        stopLoading();
         reject(err);
       });
   });
