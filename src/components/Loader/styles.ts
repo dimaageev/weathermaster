@@ -1,3 +1,4 @@
+import { COLORS_LIGHT } from "@src/constants/colors";
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
@@ -9,6 +10,6 @@ export default StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#00000033",
+    backgroundColor: COLORS_LIGHT.loaderBackground,
   },
 });

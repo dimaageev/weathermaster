@@ -5,6 +5,7 @@ import { City } from "@src/store/types";
 
 import styles from "@src/styles";
 import st from "./styles";
+import { Card } from "@src/components";
 
 const HomeScreen = () => {
   const [randomCities, setRandomCities] = useState<City[]>();
@@ -25,13 +26,7 @@ const HomeScreen = () => {
       <FlatList
         contentContainerStyle={st.flatlistContainer}
         data={randomCities}
-        renderItem={({ item }) => {
-          return (
-            <Text>{`${item?.city}, ${
-              item?.countryCode === "US" ? item?.region + ", " : ""
-            } ${item?.country}: ${item?.temp}`}</Text>
-          );
-        }}
+        renderItem={({ item }) => <Card cityItem={item} />}
       />
     </View>
   );
