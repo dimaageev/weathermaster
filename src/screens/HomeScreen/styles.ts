@@ -5,5 +5,6 @@ export default StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginHorizontal: 30,
   },
 });

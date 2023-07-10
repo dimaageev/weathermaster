@@ -8,4 +8,7 @@ export default StyleSheet.create({
     alignItems: "center",
     backgroundColor: COLORS_LIGHT.background,
   },
+  align: {
+    alignItems: "center",
+  },
 });

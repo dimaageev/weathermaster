@@ -1,0 +1,23 @@
+import useTheme from "@src/hooks/useTheme";
+import { StyleSheet, PixelRatio } from "react-native";
+
+export default StyleSheet.create({
+  pressable: {
+    margin: 15,
+    borderRadius: 15,
+  },
+  wrapper: {
+    width: 180,
+    height: 120,
+    backgroundColor: "#FFF",
+    borderRadius: 15,
+    elevation: PixelRatio.roundToNearestPixel(4),
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 4,
+  },
+});

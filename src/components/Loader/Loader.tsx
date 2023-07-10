@@ -23,7 +23,11 @@ export default class Loader extends PureComponent {
   render(): React.ReactNode {
     return this.state.loaderIsActive ? (
       <View style={styles.absolute}>
-        <LottieView source={this.state.source} autoPlay />
+        <LottieView
+          source={this.state.source}
+          autoPlay
+          style={{ transform: [{ scale: 0.5 }] }}
+        />
       </View>
     ) : null;
   }
