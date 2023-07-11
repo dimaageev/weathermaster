@@ -6,14 +6,26 @@ import { MotiText, MotiView } from "moti";
 import st from "./styles";
 import useTheme from "@src/hooks/useTheme";
 
-const Card: FC<CardProps> = ({ cityItem }) => {
+const Card: FC<CardProps> = ({ cityItem, highest, onCardPress }) => {
   const [flipped, setFlipped] = useState(false);
   const { theme } = useTheme();
 
+  const pressHandler = () => {
+    onCardPress(cityItem);
+    setFlipped(!flipped);
+  };
+
   return (
     <Pressable
-      style={[st.pressable, { backgroundColor: theme.background }]}
-      onPress={() => setFlipped(!flipped)}
+      style={[
+        st.pressable,
+        {
+          backgroundColor: theme.background,
+          borderWidth: flipped ? 2 : 0,
+          borderColor: highest && flipped ? "green" : "red",
+        },
+      ]}
+      onPress={pressHandler}
     >
       <MotiView
         style={st.wrapper}

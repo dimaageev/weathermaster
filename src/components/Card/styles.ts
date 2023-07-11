@@ -9,6 +9,8 @@ export default StyleSheet.create({
   wrapper: {
     width: 180,
     height: 120,
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#FFF",
     borderRadius: 15,
     elevation: PixelRatio.roundToNearestPixel(4),
