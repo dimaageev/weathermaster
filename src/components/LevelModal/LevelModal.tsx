@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, Button } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Level, LevelModalProps } from "./types";
 import Modal from "react-native-modal";
 
@@ -14,11 +14,12 @@ const LevelModal: FC<LevelModalProps> = ({ level, setLevel }) => {
       <Modal isVisible={!level} style={styles.align}>
         <View style={st.container}>
           {labels.map((label) => (
-            <Button
+            <TouchableOpacity
               key={label}
-              title={label}
               onPress={() => setLevel(label.toLowerCase() as Level)}
-            />
+            >
+              <Text>{label}</Text>
+            </TouchableOpacity>
           ))}
         </View>
       </Modal>

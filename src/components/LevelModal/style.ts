@@ -6,6 +6,7 @@ export default StyleSheet.create({
     width: "70%",
     height: 140,
     justifyContent: "space-around",
+    alignItems: "center",
     borderRadius: 15,
   },
 });
