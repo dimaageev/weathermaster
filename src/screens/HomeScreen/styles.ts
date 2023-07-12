@@ -7,4 +7,8 @@ export default StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 30,
   },
+  headerContainer: {},
+  footerContainer: {
+    alignItems: "center",
+  },
 });

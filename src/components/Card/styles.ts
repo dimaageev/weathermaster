@@ -7,7 +7,7 @@ export default StyleSheet.create({
     borderRadius: 15,
   },
   wrapper: {
-    width: 180,
+    width: 220,
     height: 120,
     justifyContent: "center",
     alignItems: "center",

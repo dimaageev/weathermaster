@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { HomeScreen } from "@screens/index";
-import { Header, LevelModal, Loader } from "@src/components";
+import {
+  Header,
+  HistoryBottomSheet,
+  LevelModal,
+  Loader,
+} from "@src/components";
 import { saveLoaderRef } from "@src/utils/refs/loader";
 import { useDataset } from "@src/hooks/useDataset";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Alert } from "react-native";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+
+import "react-native-gesture-handler";
 
 export default function App() {
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { level, setLevel, dataset } = useDataset();
 
   const onRestart = () => {
@@ -26,7 +35,9 @@ export default function App() {
       ]
     );
   };
-  const onHistory = () => {};
+  const onHistory = useCallback(() => {
+    bottomSheetRef?.current?.present();
+  }, []);
 
   return (
     <SafeAreaProvider>
@@ -36,6 +47,7 @@ export default function App() {
       </SafeAreaView>
       <Loader ref={saveLoaderRef} />
       <LevelModal level={level} setLevel={setLevel} />
+      <HistoryBottomSheet ref={bottomSheetRef} />
     </SafeAreaProvider>
   );
 }

@@ -1,75 +1,64 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { CardProps } from "./types";
-import { MotiText, MotiView } from "moti";
+import { MotiView } from "moti";
 
 import st from "./styles";
 import useTheme from "@src/hooks/useTheme";
 
-const Card: FC<CardProps> = ({ cityItem, highest, onCardPress }) => {
+const Card: FC<CardProps> = ({ index, cityItem, highest, onCardPress }) => {
   const [flipped, setFlipped] = useState(false);
   const { theme } = useTheme();
 
   const pressHandler = () => {
     onCardPress(cityItem);
-    setFlipped(!flipped);
+    setFlipped(true);
   };
 
   return (
-    <Pressable
-      style={[
-        st.pressable,
-        {
-          backgroundColor: theme.background,
-          borderWidth: flipped ? 2 : 0,
-          borderColor: highest && flipped ? "green" : "red",
-        },
-      ]}
-      onPress={pressHandler}
-    >
+    <Pressable style={[st.pressable]} onPress={pressHandler}>
       <MotiView
-        style={st.wrapper}
-        // from={{
-
-        // }}
-        // animate={{
-        //   scaleX: flipped ? 0.05 : 1,
-        // }}
-        // transition={{
-        //   loop: true,
-        //   repeat: 2,
-        //   duration: 200,
-        // }}
+        from={{
+          translateY: 500,
+        }}
+        animate={{
+          translateY: 0,
+        }}
+        transition={{
+          delay: index * 500,
+          type: "timing",
+        }}
       >
-        {!flipped ? (
-          <MotiText
-          // from={{
-          //   transform: [{ scale: flipped ? 1 : 0 }],
-          // }}
-          // animate={{
-          //   transform: [{ scale: flipped ? 0 : 1 }],
-          // }}
-          // transition={{
-          //   type: "timing",
-          // }}
-          >{`${cityItem?.city}, ${
-            cityItem?.countryCode === "US" ? cityItem?.region + ", " : ""
-          } ${cityItem?.country}`}</MotiText>
-        ) : (
-          <MotiText
-          // from={{
-          //   transform: [{ scale: flipped ? 0 : 1 }],
-          // }}
-          // animate={{
-          //   transform: [{ scale: flipped ? 1 : 0 }],
-          // }}
-          // transition={{
-          //   type: "timing",
-          // }}
-          >
-            {cityItem?.temp}
-          </MotiText>
-        )}
+        <MotiView
+          style={[
+            st.wrapper,
+            {
+              backgroundColor: theme.background,
+              borderWidth: flipped ? 2 : 0,
+              borderColor: highest && flipped ? "green" : "red",
+            },
+          ]}
+          animate={{
+            scaleX: flipped ? -1 : 1,
+          }}
+          transition={{
+            type: "timing",
+          }}
+        >
+          {!flipped ? (
+            <Text>{`${cityItem?.city}, ${
+              cityItem?.countryCode === "US" ? cityItem?.region + ", " : ""
+            } ${cityItem?.country}`}</Text>
+          ) : (
+            <Text
+              style={{
+                transform: [{ scaleX: -1 }],
+              }}
+            >
+              {cityItem?.temp}
+            </Text>
+          )}
+        </MotiView>
       </MotiView>
     </Pressable>
   );
