@@ -1,16 +1,14 @@
 import React, { useEffect, useState, FC } from "react";
-import { View, FlatList, Text, Alert } from "react-native";
+import { View, FlatList, Text, Alert, TouchableOpacity } from "react-native";
 import { getRandomCity } from "@src/store/api";
-import { City } from "@src/store/types";
+import { City, HistoryItem } from "@src/store/types";
 
 import st from "./styles";
 import { Card } from "@src/components";
 import { Level } from "@src/components/LevelModal/types";
 import { Dataset } from "@src/constants/dataset";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDataset } from "@src/hooks/useDataset";
-
 interface Props {
   level: Level;
   dataset?: Dataset;
@@ -26,21 +24,27 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
   const [flippedCards, setFlippedCards] = useState<Array<number> | undefined>(
     []
   );
-  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<false | "win" | "lost">(false);
+  const [historyItem, setHistoryItem] = useState<HistoryItem>();
 
   console.log(highestTempCity);
 
   useEffect(() => {
-    (async () => {
-      const cities: City[] = [];
-      for (let i = 0; i < dataset?.cardAmount!; i++) {
-        const city = await getRandomCity();
-        cities.push(city);
-      }
-      setFlippedCards([]);
-      setRandomCities(cities);
-      setHighestTempCity([...cities].sort((a, b) => b.temp - a.temp)[0]);
-    })();
+    if (currentRound <= dataset?.rounds!) {
+      (async () => {
+        setGameOver(false);
+        const cities: City[] = [];
+        for (let i = 0; i < dataset?.cardAmount!; i++) {
+          const city = await getRandomCity();
+          cities.push(city);
+        }
+        setFlippedCards([]);
+        setRandomCities(cities);
+        setHighestTempCity([...cities].sort((a, b) => b.temp - a.temp)[0]);
+      })();
+    } else {
+      setGameOver("win");
+    }
   }, [currentRound]);
 
   const onCardPress = (item: City) => {
@@ -68,7 +72,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           setFlippedCards(turnAll);
         }, 1000);
         setTimeout(() => {
-          setGameOver(true);
+          setGameOver("lost");
           Alert.alert("Game Over", "", [
             {
               text: "Ok",
@@ -102,13 +106,15 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
-      <View style={st.headerContainer}>
-        <Text>
-          Round: {currentRound} / {dataset?.rounds}
-        </Text>
-        <Text>Mistakes left: {mistakesLeft! < 0 ? "0" : mistakesLeft}</Text>
-        <Text>Helps left: {helpsLeft}</Text>
-      </View>
+      {currentRound <= dataset?.rounds! ? (
+        <View style={st.headerContainer}>
+          <Text>
+            Round: {currentRound} / {dataset?.rounds}
+          </Text>
+          <Text>Mistakes left: {mistakesLeft! < 0 ? "0" : mistakesLeft}</Text>
+          <Text>Helps left: {helpsLeft}</Text>
+        </View>
+      ) : null}
       <FlatList
         bounces={false}
         contentContainerStyle={st.flatlistContainer}
@@ -125,7 +131,11 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
         )}
       />
       {helpsLeft! > 0 ? (
-        <TouchableOpacity style={st.footerContainer} onPress={onHelpPress}>
+        <TouchableOpacity
+          style={st.footerContainer}
+          onPress={onHelpPress}
+          disabled={flippedCards?.length! > 0}
+        >
           <Ionicons name="bulb-outline" size={26} />
           <Text>Ask for help</Text>
         </TouchableOpacity>

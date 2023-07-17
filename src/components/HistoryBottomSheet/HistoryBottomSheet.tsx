@@ -6,6 +6,7 @@ import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 interface Props {}
 
@@ -18,6 +19,7 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
   );
 
   return (
+    // <GestureHandlerRootView>
     <BottomSheetModalProvider>
       <BottomSheetModal
         ref={ref}
@@ -28,6 +30,7 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
         <View />
       </BottomSheetModal>
     </BottomSheetModalProvider>
+    // </GestureHandlerRootView>
   );
 });
 

@@ -60,9 +60,9 @@ const Card: FC<CardProps> = ({
           }}
         >
           {!flippedCards?.includes(cityItem.id) ? (
-            <Text
-              style={st.cityLabel}
-            >{`${cityItem?.city}, ${cityItem?.region}, ${cityItem?.country}`}</Text>
+            <Text style={st.cityLabel}>{`${cityItem?.city}, ${
+              cityItem?.region || ""
+            }, ${cityItem?.country}`}</Text>
           ) : (
             <Text
               style={{

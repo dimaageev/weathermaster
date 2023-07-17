@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 export default StyleSheet.create({
   flatlistContainer: {
@@ -10,5 +10,6 @@ export default StyleSheet.create({
   headerContainer: {},
   footerContainer: {
     alignItems: "center",
+    paddingBottom: Platform.OS === "android" ? 20 : 0,
   },
 });
