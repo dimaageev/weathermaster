@@ -43,7 +43,13 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <Header onLeftIconPress={onRestart} onRightIconPress={onHistory} />
-        {!!dataset && <HomeScreen level={level} dataset={dataset} />}
+        {!!dataset && (
+          <HomeScreen
+            level={level}
+            dataset={dataset}
+            onGameOver={() => setLevel("")}
+          />
+        )}
       </SafeAreaView>
       <Loader ref={saveLoaderRef} />
       <LevelModal level={level} setLevel={setLevel} />

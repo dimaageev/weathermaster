@@ -22,4 +22,8 @@ export default StyleSheet.create({
     },
     shadowRadius: 4,
   },
+  cityLabel: {
+    maxWidth: "90%",
+    textAlign: "center",
+  },
 });

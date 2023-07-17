@@ -6,17 +6,28 @@ import { MotiView } from "moti";
 import st from "./styles";
 import useTheme from "@src/hooks/useTheme";
 
-const Card: FC<CardProps> = ({ index, cityItem, highest, onCardPress }) => {
-  const [flipped, setFlipped] = useState(false);
+const Card: FC<CardProps> = ({
+  index,
+  cityItem,
+  flippedCards,
+  disabled,
+  highest,
+  onCardPress,
+}) => {
+  // const [flipped, setFlipped] = useState(false);
   const { theme } = useTheme();
 
   const pressHandler = () => {
     onCardPress(cityItem);
-    setFlipped(true);
+    // setFlipped(true);
   };
 
   return (
-    <Pressable style={[st.pressable]} onPress={pressHandler}>
+    <Pressable
+      style={[st.pressable]}
+      onPress={pressHandler}
+      disabled={disabled}
+    >
       <MotiView
         from={{
           translateY: 500,
@@ -34,21 +45,24 @@ const Card: FC<CardProps> = ({ index, cityItem, highest, onCardPress }) => {
             st.wrapper,
             {
               backgroundColor: theme.background,
-              borderWidth: flipped ? 2 : 0,
-              borderColor: highest && flipped ? "green" : "red",
+              borderWidth: flippedCards?.includes(cityItem.id) ? 2 : 0,
+              borderColor:
+                highest && flippedCards?.includes(cityItem.id)
+                  ? "green"
+                  : "red",
             },
           ]}
           animate={{
-            scaleX: flipped ? -1 : 1,
+            scaleX: flippedCards?.includes(cityItem.id) ? -1 : 1,
           }}
           transition={{
             type: "timing",
           }}
         >
-          {!flipped ? (
-            <Text>{`${cityItem?.city}, ${
-              cityItem?.countryCode === "US" ? cityItem?.region + ", " : ""
-            } ${cityItem?.country}`}</Text>
+          {!flippedCards?.includes(cityItem.id) ? (
+            <Text
+              style={st.cityLabel}
+            >{`${cityItem?.city}, ${cityItem?.region}, ${cityItem?.country}`}</Text>
           ) : (
             <Text
               style={{
