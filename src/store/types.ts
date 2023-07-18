@@ -24,7 +24,7 @@ export type Round = {
 export interface HistoryItem {
   id: string;
   score: string;
-  status: string | boolean;
+  status: string;
   level?: string;
   helpsUsed: number;
   hadMistakes: number;

@@ -12,6 +12,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import { addElementToArrayInAsyncStorage } from "@src/utils/asyncStorage";
+import { startLoading, stopLoading } from "@src/utils/refs/loader";
 
 interface Props {
   level: Level;
@@ -49,13 +50,12 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     }
   }, [currentRound, gameOver]);
 
-  const onFinish = async () => {
+  const onFinish = async (status: "win" | "lost") => {
+    startLoading();
     const historyItem = {
       id: uuidv4(),
-      score: `${gameOver === "win" ? currentRound - 1 : currentRound} / ${
-        dataset?.rounds
-      }`,
-      status: gameOver,
+      score: `${currentRound - 1} / ${dataset?.rounds}`,
+      status: status,
       level: dataset?.label,
       helpsUsed: dataset?.help! - helpsLeft!,
       hadMistakes: dataset?.mistakes! - mistakesLeft!,
@@ -64,6 +64,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     };
     await addElementToArrayInAsyncStorage("history", historyItem);
     onGameOver();
+    stopLoading();
   };
 
   useEffect(() => {
@@ -93,7 +94,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
       Alert.alert("You won!", "Now you are the weathermaster", [
         {
           text: "Ok",
-          onPress: () => onFinish(),
+          onPress: () => onFinish("win"),
         },
       ]);
     }
@@ -130,7 +131,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           Alert.alert("Game Over!", "", [
             {
               text: "Ok",
-              onPress: () => onFinish(),
+              onPress: () => onFinish("lost"),
             },
           ]);
         }, 2000);
