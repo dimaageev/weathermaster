@@ -1,14 +1,17 @@
-import React, { useEffect, useState, FC } from "react";
+import "react-native-get-random-values";
+import React, { useEffect, useState, FC, useMemo, useCallback } from "react";
 import { View, FlatList, Text, Alert, TouchableOpacity } from "react-native";
 import { getRandomCity } from "@src/store/api";
-import { City, HistoryItem } from "@src/store/types";
+import { City, HistoryItem, Round } from "@src/store/types";
 
 import st from "./styles";
 import { Card } from "@src/components";
 import { Level } from "@src/components/LevelModal/types";
 import { Dataset } from "@src/constants/dataset";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useDataset } from "@src/hooks/useDataset";
+import { v4 as uuidv4 } from "uuid";
+import { format } from "date-fns";
+
 interface Props {
   level: Level;
   dataset?: Dataset;
@@ -24,10 +27,49 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
   const [flippedCards, setFlippedCards] = useState<Array<number> | undefined>(
     []
   );
+  const [pickedCards, setPickedCards] = useState<Array<City>>([]);
   const [gameOver, setGameOver] = useState<false | "win" | "lost">(false);
   const [historyItem, setHistoryItem] = useState<HistoryItem>();
+  const [historyRounds, setHistoryRounds] = useState<Array<Round | undefined>>(
+    []
+  );
 
   console.log(highestTempCity);
+
+  useEffect(() => {
+    if (randomCities && highestTempCity && pickedCards) {
+      setHistoryRounds([
+        ...historyRounds,
+        {
+          answers: randomCities,
+          correctAnswer: highestTempCity,
+          myAnswers: pickedCards,
+        },
+      ]);
+    }
+  }, [currentRound, gameOver]);
+
+  useEffect(() => {
+    if (gameOver === "win" || gameOver === "lost") {
+      if (gameOver === "win") {
+        historyRounds.pop();
+      }
+      setHistoryItem({
+        id: uuidv4(),
+        score: `${gameOver === "win" ? currentRound - 1 : currentRound} / ${
+          dataset?.rounds
+        }`,
+        status: gameOver,
+        level: dataset?.label,
+        helpsUsed: dataset?.help! - helpsLeft!,
+        hadMistakes: dataset?.mistakes! - mistakesLeft!,
+        rounds: historyRounds,
+        date: format(new Date(), "dd-MM-yy"),
+      });
+    }
+  }, [gameOver, historyRounds]);
+
+  console.log(historyItem);
 
   useEffect(() => {
     if (currentRound <= dataset?.rounds!) {
@@ -38,18 +80,26 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           const city = await getRandomCity();
           cities.push(city);
         }
+        setPickedCards([]);
         setFlippedCards([]);
         setRandomCities(cities);
         setHighestTempCity([...cities].sort((a, b) => b.temp - a.temp)[0]);
       })();
     } else {
       setGameOver("win");
+      Alert.alert("You won!", "Now you are the weathermaster", [
+        {
+          text: "Ok",
+          onPress: () => onGameOver(),
+        },
+      ]);
     }
   }, [currentRound]);
 
   const onCardPress = (item: City) => {
     const turnAll = randomCities?.map((city) => city.id);
     if (!flippedCards?.includes(item.id)) {
+      setPickedCards([...pickedCards!, item]);
       setFlippedCards([...flippedCards!, item.id]);
       if (mistakesLeft === 0) {
         setTimeout(() => {
@@ -62,18 +112,19 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
         setFlippedCards(turnAll);
       }, 1000);
       setTimeout(() => {
-        setCurrentRound((prev) => prev + 1);
+        if (currentRound <= dataset?.rounds!) {
+          setCurrentRound((prev) => prev + 1);
+        }
       }, 2000);
     } else {
       setMistakesLeft((prev) => prev! - 1);
-      console.log(mistakesLeft);
       if (mistakesLeft! === 0) {
         setTimeout(() => {
           setFlippedCards(turnAll);
         }, 1000);
         setTimeout(() => {
           setGameOver("lost");
-          Alert.alert("Game Over", "", [
+          Alert.alert("Game Over!", "", [
             {
               text: "Ok",
               onPress: () => onGameOver(),
@@ -132,7 +183,10 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
       />
       {helpsLeft! > 0 ? (
         <TouchableOpacity
-          style={st.footerContainer}
+          style={[
+            st.footerContainer,
+            flippedCards?.length! > 0 ? { opacity: 0.4 } : {},
+          ]}
           onPress={onHelpPress}
           disabled={flippedCards?.length! > 0}
         >

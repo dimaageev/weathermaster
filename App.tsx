@@ -10,9 +10,13 @@ import { saveLoaderRef } from "@src/utils/refs/loader";
 import { useDataset } from "@src/hooks/useDataset";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Alert } from "react-native";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
 
 import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -40,20 +44,24 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Header onLeftIconPress={onRestart} onRightIconPress={onHistory} />
-        {!!dataset && (
-          <HomeScreen
-            level={level}
-            dataset={dataset}
-            onGameOver={() => setLevel("")}
-          />
-        )}
-      </SafeAreaView>
-      <Loader ref={saveLoaderRef} />
-      <LevelModal level={level} setLevel={setLevel} />
-      <HistoryBottomSheet ref={bottomSheetRef} />
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <BottomSheetModalProvider>
+          <SafeAreaView style={{ flex: 1 }}>
+            <Header onLeftIconPress={onRestart} onRightIconPress={onHistory} />
+            {!!dataset && (
+              <HomeScreen
+                level={level}
+                dataset={dataset}
+                onGameOver={() => setLevel("")}
+              />
+            )}
+          </SafeAreaView>
+          <Loader ref={saveLoaderRef} />
+          <LevelModal level={level} setLevel={setLevel} />
+          <HistoryBottomSheet ref={bottomSheetRef} />
+        </BottomSheetModalProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

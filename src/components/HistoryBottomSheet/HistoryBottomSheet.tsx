@@ -1,12 +1,10 @@
 import React, { forwardRef, useMemo, useCallback } from "react";
 import { View } from "react-native";
 import {
-  BottomSheetModalProvider,
   BottomSheetModal,
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 interface Props {}
 
@@ -19,18 +17,14 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
   );
 
   return (
-    // <GestureHandlerRootView>
-    <BottomSheetModalProvider>
-      <BottomSheetModal
-        ref={ref}
-        snapPoints={snapPoints}
-        index={1}
-        backdropComponent={renderBackdrop}
-      >
-        <View />
-      </BottomSheetModal>
-    </BottomSheetModalProvider>
-    // </GestureHandlerRootView>
+    <BottomSheetModal
+      ref={ref}
+      snapPoints={snapPoints}
+      index={1}
+      backdropComponent={renderBackdrop}
+    >
+      <View />
+    </BottomSheetModal>
   );
 });
 

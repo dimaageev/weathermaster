@@ -15,15 +15,19 @@ export interface City {
   temp: number;
 }
 
+export type Round = {
+  answers?: Array<City>;
+  correctAnswer?: City;
+  myAnswers?: Array<City>;
+};
+
 export interface HistoryItem {
   id: string;
   score: string;
-  status: string;
-  level: string;
+  status: string | boolean;
+  level?: string;
   helpsUsed: number;
-  rounds: {
-    answers: Array<Pick<City, "id" | "city" | "region" | "country" | "temp">>;
-    correctAnswer: Pick<City, "id" | "city" | "region" | "country" | "temp">;
-  };
+  hadMistakes: number;
+  rounds: Array<Round | undefined>;
   date: string;
 }
