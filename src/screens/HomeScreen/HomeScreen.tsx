@@ -11,6 +11,7 @@ import { Dataset } from "@src/constants/dataset";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
+import { addElementToArrayInAsyncStorage } from "@src/utils/asyncStorage";
 
 interface Props {
   level: Level;
@@ -29,12 +30,11 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
   );
   const [pickedCards, setPickedCards] = useState<Array<City>>([]);
   const [gameOver, setGameOver] = useState<false | "win" | "lost">(false);
-  const [historyItem, setHistoryItem] = useState<HistoryItem>();
   const [historyRounds, setHistoryRounds] = useState<Array<Round | undefined>>(
     []
   );
 
-  console.log(highestTempCity);
+  // console.log(highestTempCity);
 
   useEffect(() => {
     if (randomCities && highestTempCity && pickedCards) {
@@ -49,27 +49,30 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     }
   }, [currentRound, gameOver]);
 
+  const onFinish = async () => {
+    const historyItem = {
+      id: uuidv4(),
+      score: `${gameOver === "win" ? currentRound - 1 : currentRound} / ${
+        dataset?.rounds
+      }`,
+      status: gameOver,
+      level: dataset?.label,
+      helpsUsed: dataset?.help! - helpsLeft!,
+      hadMistakes: dataset?.mistakes! - mistakesLeft!,
+      rounds: historyRounds,
+      date: format(new Date(), "dd-MM-yy"),
+    };
+    await addElementToArrayInAsyncStorage("history", historyItem);
+    onGameOver();
+  };
+
   useEffect(() => {
     if (gameOver === "win" || gameOver === "lost") {
       if (gameOver === "win") {
         historyRounds.pop();
       }
-      setHistoryItem({
-        id: uuidv4(),
-        score: `${gameOver === "win" ? currentRound - 1 : currentRound} / ${
-          dataset?.rounds
-        }`,
-        status: gameOver,
-        level: dataset?.label,
-        helpsUsed: dataset?.help! - helpsLeft!,
-        hadMistakes: dataset?.mistakes! - mistakesLeft!,
-        rounds: historyRounds,
-        date: format(new Date(), "dd-MM-yy"),
-      });
     }
   }, [gameOver, historyRounds]);
-
-  console.log(historyItem);
 
   useEffect(() => {
     if (currentRound <= dataset?.rounds!) {
@@ -90,7 +93,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
       Alert.alert("You won!", "Now you are the weathermaster", [
         {
           text: "Ok",
-          onPress: () => onGameOver(),
+          onPress: () => onFinish(),
         },
       ]);
     }
@@ -127,7 +130,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           Alert.alert("Game Over!", "", [
             {
               text: "Ok",
-              onPress: () => onGameOver(),
+              onPress: () => onFinish(),
             },
           ]);
         }, 2000);
