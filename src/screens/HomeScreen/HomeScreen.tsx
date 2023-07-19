@@ -35,7 +35,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     []
   );
 
-  // console.log(highestTempCity);
+  console.log(highestTempCity);
 
   useEffect(() => {
     if (randomCities && highestTempCity && pickedCards) {

@@ -15,18 +15,9 @@ const HistoryItem: FC<HistoryItemProps> = ({ item }) => {
   };
 
   return (
-    <>
+    <View style={st.wrapper}>
       <TouchableOpacity
-        style={[
-          st.container,
-          detailsVisible
-            ? {
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0,
-                borderBottomWidth: 0,
-              }
-            : {},
-        ]}
+        style={st.container}
         onPress={handleDetails}
         activeOpacity={1}
       >
@@ -59,7 +50,7 @@ const HistoryItem: FC<HistoryItemProps> = ({ item }) => {
           />
         </View>
       ) : null}
-    </>
+    </View>
   );
 };
 
