@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import { addElementToArrayInAsyncStorage } from "@src/utils/asyncStorage";
 import { startLoading, stopLoading } from "@src/utils/refs/loader";
+import useTheme from "@src/hooks/useTheme";
 
 interface Props {
   level: Level;
@@ -21,6 +22,8 @@ interface Props {
 }
 
 const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
+  const { theme } = useTheme();
+
   const [randomCities, setRandomCities] = useState<City[]>();
   const [highestTempCity, setHighestTempCity] = useState<City>();
   const [currentRound, setCurrentRound] = useState<number>(1);
@@ -152,14 +155,22 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: theme.background,
+      }}
+    >
       {currentRound <= dataset?.rounds! ? (
         <View style={st.headerContainer}>
-          <Text>
+          <Text style={{ color: theme.label }}>
             Round: {currentRound} / {dataset?.rounds}
           </Text>
-          <Text>Mistakes left: {mistakesLeft! < 0 ? "0" : mistakesLeft}</Text>
-          <Text>Helps left: {helpsLeft}</Text>
+          <Text style={{ color: theme.label }}>
+            Mistakes left: {mistakesLeft! < 0 ? "0" : mistakesLeft}
+          </Text>
+          <Text style={{ color: theme.label }}>Helps left: {helpsLeft}</Text>
         </View>
       ) : null}
       <FlatList
@@ -186,8 +197,8 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           onPress={onHelpPress}
           disabled={flippedCards?.length! > 0}
         >
-          <Ionicons name="bulb-outline" size={26} />
-          <Text>Ask for help</Text>
+          <Ionicons name="bulb-outline" size={26} color={theme.label} />
+          <Text style={{ color: theme.label }}>Ask for help</Text>
         </TouchableOpacity>
       ) : null}
     </View>

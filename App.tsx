@@ -17,10 +17,13 @@ import {
 
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import useTheme from "@src/hooks/useTheme";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { level, setLevel, dataset } = useDataset();
+  const { theme } = useTheme();
 
   const onRestart = () => {
     Alert.alert(
@@ -45,9 +48,13 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar
+        translucent
+        style={theme.label === "#FFF" ? "light" : "dark"}
+      />
       <SafeAreaProvider>
         <BottomSheetModalProvider>
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
             <Header onLeftIconPress={onRestart} onRightIconPress={onHistory} />
             {!!dataset && (
               <HomeScreen

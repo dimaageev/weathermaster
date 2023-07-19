@@ -5,6 +5,7 @@ import { MotiView } from "moti";
 
 import st from "./styles";
 import useTheme from "@src/hooks/useTheme";
+import { COLORS_COMMON } from "@src/constants/colors";
 
 const Card: FC<CardProps> = ({
   index,
@@ -44,12 +45,13 @@ const Card: FC<CardProps> = ({
           style={[
             st.wrapper,
             {
+              shadowColor: theme.label,
               backgroundColor: theme.background,
               borderWidth: flippedCards?.includes(cityItem.id) ? 2 : 0,
               borderColor:
                 highest && flippedCards?.includes(cityItem.id)
-                  ? "green"
-                  : "red",
+                  ? COLORS_COMMON.green
+                  : COLORS_COMMON.red,
             },
           ]}
           animate={{
@@ -60,12 +62,13 @@ const Card: FC<CardProps> = ({
           }}
         >
           {!flippedCards?.includes(cityItem.id) ? (
-            <Text style={st.cityLabel}>{`${cityItem?.city}, ${
-              cityItem?.region || ""
-            }, ${cityItem?.country}`}</Text>
+            <Text style={[st.cityLabel, { color: theme.label }]}>{`${
+              cityItem?.city
+            }, ${cityItem?.region || ""}, ${cityItem?.country}`}</Text>
           ) : (
             <Text
               style={{
+                color: theme.label,
                 transform: [{ scaleX: -1 }],
               }}
             >

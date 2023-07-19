@@ -11,10 +11,8 @@ export default StyleSheet.create({
     height: 120,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FFF",
     borderRadius: 15,
     elevation: PixelRatio.roundToNearestPixel(4),
-    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: {
       width: 0,

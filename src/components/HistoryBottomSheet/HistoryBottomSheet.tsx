@@ -19,12 +19,15 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import st from "./style";
 import { HistoryItem } from "@src/store/types";
 import HistoryItemComponent from "../HistoryItem/HistoryItem";
+import useTheme from "@src/hooks/useTheme";
+import { COLORS_COMMON } from "@src/constants/colors";
 
 interface Props {}
 
 const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
   const [history, setHistory] = useState<Array<HistoryItem>>([]);
   const snapPoints = useMemo(() => ["70%", "90%"], []);
+  const { theme } = useTheme();
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -57,13 +60,11 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
       onChange={onChange}
       backdropComponent={renderBackdrop}
     >
-      <View>
-        <View style={st.headerContainer}>
-          <Text style={{ color: "red" }}>Delete History</Text>
-          <TouchableOpacity onPress={removeHistory} style={st.button}>
-            <Ionicons name="trash-outline" size={28} color="red" />
-          </TouchableOpacity>
-        </View>
+      <View style={st.headerContainer}>
+        <Text style={{ color: COLORS_COMMON.red }}>Delete History</Text>
+        <TouchableOpacity onPress={removeHistory} style={st.button}>
+          <Ionicons name="trash-outline" size={28} color={COLORS_COMMON.red} />
+        </TouchableOpacity>
       </View>
       <FlatList
         contentContainerStyle={{ flex: 1 }}
