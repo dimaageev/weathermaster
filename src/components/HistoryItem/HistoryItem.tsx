@@ -44,9 +44,18 @@ const HistoryItem: FC<HistoryItemProps> = ({ item }) => {
           <Text style={{ fontWeight: "700" }}>Score: {item.score}</Text>
           <Text>Had Mistakes: {item.hadMistakes}</Text>
           <Text>Used helps: {item.helpsUsed}</Text>
+          {/* {item.rounds.map((item, index) => (
+            <RoundsItem
+              key={`${item?.correctAnswer?.id} + ${index}`}
+              round={item}
+              roundNumber={index + 1}
+            />
+          ))} */}
           <FlatList
             data={item.rounds}
-            renderItem={({ item }) => <RoundsItem round={item} />}
+            renderItem={({ item, index }) => (
+              <RoundsItem round={item} roundNumber={index + 1} />
+            )}
           />
         </View>
       ) : null}

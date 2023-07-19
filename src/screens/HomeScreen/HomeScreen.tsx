@@ -68,14 +68,6 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
   };
 
   useEffect(() => {
-    if (gameOver === "win" || gameOver === "lost") {
-      if (gameOver === "win") {
-        historyRounds.pop();
-      }
-    }
-  }, [gameOver, historyRounds]);
-
-  useEffect(() => {
     if (currentRound <= dataset?.rounds!) {
       (async () => {
         setGameOver(false);

@@ -66,7 +66,8 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
         </View>
       </View>
       <FlatList
-        data={history}
+        contentContainerStyle={{ flex: 1 }}
+        data={history.reverse()}
         renderItem={({ item }) => <HistoryItemComponent item={item} />}
       />
     </BottomSheetModal>

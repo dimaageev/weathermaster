@@ -6,4 +6,5 @@ export interface HistoryItemProps {
 
 export interface RoundItemProps {
   round: Round | undefined;
+  roundNumber: number;
 }

@@ -23,4 +23,17 @@ export default StyleSheet.create({
     padding: 15,
     alignItems: "center",
   },
+  roundContainer: {
+    borderWidth: 0.4,
+    marginVertical: 10,
+    padding: 10,
+    borderRadius: 15,
+  },
+  answerContainer: {
+    marginVertical: 5,
+    marginLeft: 5,
+  },
+  roundHeaderLabel: {
+    fontWeight: "700",
+  },
 });
