@@ -1,8 +1,8 @@
 import "react-native-get-random-values";
-import React, { useEffect, useState, FC, useMemo, useCallback } from "react";
+import React, { useEffect, useState, FC } from "react";
 import { View, FlatList, Text, Alert, TouchableOpacity } from "react-native";
 import { getRandomCity } from "@src/store/api";
-import { City, HistoryItem, Round } from "@src/store/types";
+import { City, Round } from "@src/store/types";
 
 import st from "./styles";
 import { Card } from "@src/components";
@@ -37,7 +37,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
   const [historyRounds, setHistoryRounds] = useState<Array<Round | undefined>>(
     []
   );
-
+  const [saveVisible, setSaveVisible] = useState(false);
   console.log(highestTempCity);
 
   useEffect(() => {
@@ -53,7 +53,12 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     }
   }, [currentRound, gameOver]);
 
-  const onFinish = async (status: "win" | "lost") => {
+  console.log(historyRounds);
+  console.log(historyRounds.length);
+
+  async function onFinish(status: "win" | "lost") {
+    console.log(historyRounds);
+    console.log(historyRounds.length);
     startLoading();
     const historyItem = {
       id: uuidv4(),
@@ -68,7 +73,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     await addElementToArrayInAsyncStorage("history", historyItem);
     onGameOver();
     stopLoading();
-  };
+  }
 
   useEffect(() => {
     if (currentRound <= dataset?.rounds!) {
@@ -86,12 +91,13 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
       })();
     } else {
       setGameOver("win");
-      Alert.alert("You won!", "Now you are the weathermaster", [
-        {
-          text: "Ok",
-          onPress: () => onFinish("win"),
-        },
-      ]);
+      // Alert.alert("You won!", "Now you are the weathermaster", [
+      //   {
+      //     text: "Ok",
+      //     onPress: () => onFinish("win"),
+      //   },
+      // ]);
+      setSaveVisible(true);
     }
   }, [currentRound]);
 
@@ -123,12 +129,13 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
         }, 1000);
         setTimeout(() => {
           setGameOver("lost");
-          Alert.alert("Game Over!", "", [
-            {
-              text: "Ok",
-              onPress: () => onFinish("lost"),
-            },
-          ]);
+          // Alert.alert("Game Over!", "", [
+          //   {
+          //     text: "Ok",
+          //     onPress: () => onFinish("lost"),
+          //   },
+          // ]);
+          setSaveVisible(true);
         }, 2000);
       }
     }
@@ -188,6 +195,11 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           />
         )}
       />
+      {saveVisible ? (
+        <TouchableOpacity onPress={() => onFinish("lost")}>
+          <Text>Save to async</Text>
+        </TouchableOpacity>
+      ) : null}
       {helpsLeft! > 0 ? (
         <TouchableOpacity
           style={[

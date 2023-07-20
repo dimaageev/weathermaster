@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ScrollView } from "react-native";
 import { HistoryItemProps } from "./types";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 
@@ -52,7 +52,10 @@ const HistoryItem: FC<HistoryItemProps> = ({ item }) => {
         />
       </TouchableOpacity>
       {detailsVisible ? (
-        <View style={st.detailsContainer}>
+        <ScrollView
+          contentContainerStyle={st.detailsContainer}
+          showsVerticalScrollIndicator={false}
+        >
           <Text style={{ color: theme.label, fontWeight: "700" }}>
             Score: {item.score}
           </Text>
@@ -68,7 +71,7 @@ const HistoryItem: FC<HistoryItemProps> = ({ item }) => {
               <RoundsItem round={item} roundNumber={index + 1} />
             )}
           />
-        </View>
+        </ScrollView>
       ) : null}
     </View>
   );

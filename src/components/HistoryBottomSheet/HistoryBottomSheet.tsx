@@ -21,6 +21,7 @@ import { HistoryItem } from "@src/store/types";
 import HistoryItemComponent from "../HistoryItem/HistoryItem";
 import useTheme from "@src/hooks/useTheme";
 import { COLORS_COMMON } from "@src/constants/colors";
+import Divider from "../Divider/Divider";
 
 interface Props {}
 
@@ -57,6 +58,8 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
       ref={ref}
       snapPoints={snapPoints}
       index={1}
+      backgroundStyle={{ backgroundColor: theme.background }}
+      handleIndicatorStyle={{ backgroundColor: theme.label }}
       onChange={onChange}
       backdropComponent={renderBackdrop}
     >
@@ -67,7 +70,13 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
         </TouchableOpacity>
       </View>
       <FlatList
-        contentContainerStyle={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          <>
+            <Divider xl />
+            <Divider xl />
+          </>
+        }
         data={history.reverse()}
         renderItem={({ item }) => <HistoryItemComponent item={item} />}
       />
