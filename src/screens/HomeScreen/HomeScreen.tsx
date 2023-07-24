@@ -37,8 +37,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
   const [historyRounds, setHistoryRounds] = useState<Array<Round | undefined>>(
     []
   );
-  const [saveVisible, setSaveVisible] = useState(false);
-  console.log(highestTempCity);
+  // console.log(highestTempCity);
 
   useEffect(() => {
     if (randomCities && highestTempCity && pickedCards) {
@@ -53,12 +52,7 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     }
   }, [currentRound, gameOver]);
 
-  console.log(historyRounds);
-  console.log(historyRounds.length);
-
   async function onFinish(status: "win" | "lost") {
-    console.log(historyRounds);
-    console.log(historyRounds.length);
     startLoading();
     const historyItem = {
       id: uuidv4(),
@@ -97,7 +91,6 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
       //     onPress: () => onFinish("win"),
       //   },
       // ]);
-      setSaveVisible(true);
     }
   }, [currentRound]);
 
@@ -135,7 +128,6 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           //     onPress: () => onFinish("lost"),
           //   },
           // ]);
-          setSaveVisible(true);
         }, 2000);
       }
     }
@@ -161,7 +153,35 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
     ]);
   };
 
-  return (
+  return gameOver ? (
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: theme.background,
+      }}
+    >
+      <Text style={{ color: theme.label, fontSize: 50 }}>
+        {gameOver === "win" ? "You won" : "You lost"}
+      </Text>
+      <Text style={{ color: theme.label, fontSize: 36, textAlign: "center" }}>
+        {gameOver === "win" ? "You're a weathermaster" : "Maybe try again"}
+      </Text>
+      <TouchableOpacity
+        onPress={() => onFinish(gameOver)}
+        style={{
+          borderWidth: 1,
+          borderColor: theme.label,
+          borderRadius: 10,
+          padding: 10,
+          marginTop: 10,
+        }}
+      >
+        <Text style={{ color: theme.label, fontSize: 36 }}>Ok</Text>
+      </TouchableOpacity>
+    </View>
+  ) : (
     <View
       style={{
         flex: 1,
@@ -195,11 +215,6 @@ const HomeScreen: FC<Props> = ({ level, dataset, onGameOver }) => {
           />
         )}
       />
-      {saveVisible ? (
-        <TouchableOpacity onPress={() => onFinish("lost")}>
-          <Text>Save to async</Text>
-        </TouchableOpacity>
-      ) : null}
       {helpsLeft! > 0 ? (
         <TouchableOpacity
           style={[
