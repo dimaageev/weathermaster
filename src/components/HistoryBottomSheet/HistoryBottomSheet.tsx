@@ -10,6 +10,7 @@ import {
   BottomSheetModal,
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
+  BottomSheetFlatList,
 } from "@gorhom/bottom-sheet";
 import { getArrayFromAsyncStorage } from "@src/utils/asyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -69,7 +70,7 @@ const HistoryBottomSheet = forwardRef<BottomSheetModal, Props>(({}, ref) => {
           <Ionicons name="trash-outline" size={28} color={COLORS_COMMON.red} />
         </TouchableOpacity>
       </View>
-      <FlatList
+      <BottomSheetFlatList
         showsVerticalScrollIndicator={false}
         ListFooterComponent={
           <>
